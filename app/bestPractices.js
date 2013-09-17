@@ -8,7 +8,8 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 define(function() {
   return {
     globals : function() {
-      myObject = {
+      // Add missing 'var' to declare in function scope
+      var myObject = {
         name : 'Jory'
       };
 
@@ -16,21 +17,28 @@ define(function() {
     },
 
     functions : function(flag) {
+      // Worked for me as-was, but function declaration inside blocks is not
+      // standard.
+      
+      var getValue;
+      
       if (flag) {
-        function getValue() { return 'a'; }
+        getValue = function () { return 'a'; }
       } else {
-        function getValue() { return 'b'; }
+        getValue = function () { return 'b'; }
       }
 
       return getValue();
     },
 
     parseInt : function(num) {
-      return parseInt(num);
+      // Added radix as people seem to think automatic conversion is not good.
+      // Don't know why.
+      return parseInt(num,10);
     },
 
     identity : function(val1, val2) {
-
+      return val1 === val2;
     }
   };
 });
